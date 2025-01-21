@@ -43,42 +43,57 @@ class MyRecordings(Dataset):
     def __len__(self):
         return len(self.filenames)
     
-
-data_csv1 = pd.read_csv("East_5s.csv")
-data_csv2 = pd.read_csv("West_5s.csv")
+names = ["x", "y", "p", "t"]
+data_csv1 = pd.read_csv("East_5s.csv", header=None, names=names)
+data_csv2 = pd.read_csv("West_5s.csv", header=None, names=names)
 
 data_csv1.to_numpy(dtype=np.dtype([("x", int), ("y", int), ("p", int), ("t", int)]))
-#data_csv2.to_numpy(dtype=np.dtype([("x", int), ("y", int), ("p", int), ("t", int)]))
+
+
+data_csv2.to_numpy(dtype=np.dtype([("x", int), ("y", int), ("p", int), ("t", int)]))
 
 # append the two dataframes with the addition of a channel column 
 data_csv1['c'] = 0
-#data_csv2['c'] = 1
-
-#data_csv = pd.concat([data_csv1, data_csv2])
+data_csv2['c'] = 1
 
 
 
+data_csv = pd.concat([data_csv1, data_csv2])
+data_csv.sort_values(by=['t'], inplace=True)
 
-# def csv_to_nparray(data=data_csv, dtype=np.dtype([("x", int), ("y", int), ("p", int), ("t", int)])):
 
-#     data = data_csv.to_numpy()
-#     events = np.zeros(len(data), dtype=dtype)
+
+data_csv.to_csv("see_merge.csv", index=False)
+data_csv1.to_csv("see1.csv", index=False)
+
+# function to visualize the data 
+
+# function that begins pipeline towards training an snn
+
+
+
+
+
+# # def csv_to_nparray(data=data_csv, dtype=np.dtype([("x", int), ("y", int), ("p", int), ("t", int)])):
+
+# #     data = data_csv.to_numpy()
+# #     events = np.zeros(len(data), dtype=dtype)
     
-#     events["x"] = data[:,0]
-#     events["y"] = data[:,1]
-#     events["p"] = data[:,2]
-#     events["t"] = data[:,3]
-#     return events
+# #     events["x"] = data[:,0]
+# #     events["y"] = data[:,1]
+# #     events["p"] = data[:,2]
+# #     events["t"] = data[:,3]
+# #     return events
 
-np.save(f"data/recording100.npy", data_csv1)
+# np.save(f"data/recording100.npy", data_csv1)
 
-dataset = MyRecordings(train=True, transform=transforms.NumpyAsType(int))
+# dataset = MyRecordings(train=True, transform=transforms.NumpyAsType(int))
 
-print(dataset)
+# print(dataset)
 
-events = dataset[0]
+# events = dataset[0]
 
-dataloader = torch.utils.data.DataLoader(dataset, shuffle=True)
-events = next(iter(dataloader))
+# dataloader = torch.utils.data.DataLoader(dataset, shuffle=True)
+# events = next(iter(dataloader))
 
-print(events)
+# print(events)
